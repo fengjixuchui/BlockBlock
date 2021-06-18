@@ -10,6 +10,12 @@
 #ifndef consts_h
 #define consts_h
 
+//cs consts
+// from: cs_blobs.h
+#define CS_VALID 0x00000001
+#define CS_ADHOC 0x0000002
+#define CS_RUNTIME 0x00010000
+
 //patreon url
 #define PATREON_URL @"https://www.patreon.com/join/objective_see"
 
@@ -122,6 +128,10 @@
 //prefs
 // icon mode
 #define PREF_NO_ICON_MODE @"noIconMode"
+
+//prefs
+// notarizaion mode
+#define PREF_NOTARIZATION_MODE @"notarizationMode"
 
 //prefs
 // update mode
@@ -261,6 +271,10 @@
 #define TEAM_ID @"teamID"
 #define SIGNING_ID @"signingID"
 
+#define ALERT_TYPE @"alertType"
+#define ALERT_TYPE_FILE 1
+#define ALERT_TYPE_PROCESS 2
+
 #define ALERT_ITEM_NAME @"itemName"
 #define ALERT_ITEM_FILE @"itemFile"
 #define ALERT_ITEM_OBJECT @"itemObject"
@@ -305,6 +319,7 @@
 #define PLUGIN_TYPE_CRON_JOB 4
 #define PLUGIN_TYPE_APP_LOGIN_ITEM 5
 #define PLUGIN_TYPE_EVENT_MONITOR 6
+#define PLUGIN_TYPE_PROCESS_MONITOR 7
 
 //path to kextunload
 #define KEXT_UNLOAD @"/sbin/kextunload"

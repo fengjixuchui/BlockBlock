@@ -15,6 +15,11 @@
 #import "XPCDaemonClient.h"
 #import "RulesWindowController.h"
 
+/* GLOBALS */
+
+//xpc daemon
+extern XPCDaemonClient* xpcDaemonClient;
+
 @implementation RulesWindowController
 
 @synthesize rules;
@@ -87,7 +92,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
     ^{
         //get rules
-        self.rules = [[((AppDelegate*)[[NSApplication sharedApplication] delegate]).xpcDaemonClient getRules] mutableCopy];
+        self.rules = [[xpcDaemonClient getRules] mutableCopy];
         
         //dbg msg
         logMsg(LOG_DEBUG, [NSString stringWithFormat:@"received %lu rules from daemon", (unsigned long)self.rules.count]);
@@ -100,9 +105,6 @@
         // ...gotta do this on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
                
-            //hide overlay
-            //self.loadingRules.hidden = YES;
-          
             //stop refresh spinner
             [self.refreshingIndicator stopAnimation:nil];
             
@@ -165,7 +167,7 @@
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
         ^{
             //delete
-            self.rules = [[((AppDelegate*)[[NSApplication sharedApplication] delegate]).xpcDaemonClient deleteRule:rule] mutableCopy];
+            self.rules = [[xpcDaemonClient deleteRule:rule] mutableCopy];
             
             //sort
             // case insensitive, by name
@@ -258,7 +260,16 @@ bail:
         ((NSTextField*)[tableCell viewWithTag:TABLE_ROW_SUB_TEXT_FILE]).textColor = [NSColor secondaryLabelColor];
         
         //set sub text (item)
-        ((NSTextField*)[tableCell viewWithTag:TABLE_ROW_SUB_TEXT_ITEM]).stringValue = [NSString stringWithFormat:@"item: %@", rule.itemObject];
+        if(nil != rule.itemObject)
+        {
+            //set
+            ((NSTextField*)[tableCell viewWithTag:TABLE_ROW_SUB_TEXT_ITEM]).stringValue = [NSString stringWithFormat:@"item: %@", rule.itemObject];
+        }
+        //unknown / null
+        else
+        {
+            ((NSTextField*)[tableCell viewWithTag:TABLE_ROW_SUB_TEXT_ITEM]).stringValue = @"item: not specified";
+        }
         
         //set text color to gray
         ((NSTextField*)[tableCell viewWithTag:TABLE_ROW_SUB_TEXT_ITEM]).textColor = [NSColor secondaryLabelColor];

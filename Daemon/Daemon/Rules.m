@@ -150,6 +150,7 @@ bail:
     //key
     // bundle ID or path
     key = (0 != event.file.process.signingID.length) ? event.file.process.signingID : event.file.process.path;
+    if(NULL == key) goto bail;
     
     //dbg msg
     logMsg(LOG_DEBUG, [NSString stringWithFormat:@"key for rule: %@", key]);
@@ -295,8 +296,9 @@ bail:
         [self.rules[key][KEY_RULES] enumerateObjectsUsingBlock:^(Rule* currentRule, NSUInteger index, BOOL* stop)
         {
             //is match?
-            if( (YES == [currentRule.processPath isEqualToString:rule.processPath]) &&
-                (YES == [currentRule.itemFile isEqualToString:rule.itemFile]) )
+            if( (YES == [currentRule.itemFile isEqualToString:rule.itemFile]) &&
+                 ( ((nil == currentRule.itemObject) && (nil == rule.itemObject)) ||
+                   (YES == [currentRule.itemObject isEqualToString:rule.itemObject]) ) )
             {
                 //save index
                 ruleIndex = index;
